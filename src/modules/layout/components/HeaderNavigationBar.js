@@ -14,6 +14,11 @@ export const NavigationBarContainer = styled.div`
   display: ${props => props.hidden ? 'none' : 'flex'};
   align-items: center;
   justify-content: center;
+  max-width: 500px;
+
+  @media ${props => props.theme.dimensions.smallViewport} {
+    max-width: 100%;
+  }
 `
 
 /**
