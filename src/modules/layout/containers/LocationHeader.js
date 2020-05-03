@@ -14,10 +14,13 @@ import HeaderActionItem from '../HeaderActionItem'
 import ExtrasRouteConfig, { EXTRAS_ROUTE } from '../../app/route-configs/ExtrasRouteConfig'
 import CategoriesRouteConfig, { CATEGORIES_ROUTE } from '../../app/route-configs/CategoriesRouteConfig'
 import EventsRouteConfig, { EVENTS_ROUTE } from '../../app/route-configs/EventsRouteConfig'
+import NewsRouteConfig, { NEWS_ROUTE } from '../../app/route-configs/NewsRouteConfig'
+import LocalNewsDetailsRouteConfig, { LOCAL_NEWS_DETAILS_ROUTE } from '../../app/route-configs/LocalNewsDetailsRouteConfig'
+import TuNewsListRouteConfig, { TUNEWS_LIST_ROUTE } from '../../app/route-configs/TuNewsListRouteConfig'
+import TuNewsDetailsRouteConfig, { TUNEWS_DETAILS_ROUTE } from '../../app/route-configs/TuNewsDetailsRouteConfig'
 import SearchRouteConfig from '../../app/route-configs/SearchRouteConfig'
-
 import type { LocationState } from 'redux-first-router'
-import { EventModel } from '@integreat-app/integreat-api-client'
+import { EventModel, LocalNewsModel } from '@integreat-app/integreat-api-client'
 import { WOHNEN_ROUTE } from '../../app/route-configs/WohnenRouteConfig'
 import { SPRUNGBRETT_ROUTE } from '../../app/route-configs/SprungbrettRouteConfig'
 import LandingRouteConfig from '../../app/route-configs/LandingRouteConfig'
@@ -26,11 +29,14 @@ import ScrollableMenu from './../components/ScrollableMenu'
 
 type PropsType = {|
   events: ?Array<EventModel>,
+  news: ?Array<LocalNewsModel>,
   location: LocationState,
   viewportSmall: boolean,
   t: TFunction,
   cityName: string,
   isEventsEnabled: boolean,
+  isNewsEnabled: boolean,
+  isNewsActive: boolean,
   isExtrasEnabled: boolean,
   onStickyTopChanged: number => void,
   languageChangePaths: ?LanguageChangePathsType
@@ -58,7 +64,8 @@ export class LocationHeader extends React.Component<PropsType> {
   }
 
   getNavigationItems (): Array<Element<typeof HeaderNavigationItem>> {
-    const { t, isEventsEnabled, isExtrasEnabled, location, events } = this.props
+    const { t, isEventsEnabled, isNewsEnabled, isExtrasEnabled, location, events, isNewsActive } = this.props
+
     const { city, language } = location.payload
     const currentRoute = location.type
 
@@ -66,7 +73,6 @@ export class LocationHeader extends React.Component<PropsType> {
     const isCategoriesEnabled = isExtrasEnabled || isEventsEnabled
 
     const items: any = [];
-
 
     if (isCategoriesEnabled) {
       const item = {
@@ -85,26 +91,24 @@ export class LocationHeader extends React.Component<PropsType> {
         href: new EventsRouteConfig().getRoutePath({ city, language }),
         selected: currentRoute === EVENTS_ROUTE,
         text: 'events',
-        active: true,
         tooltip: t('noEvents'),
         active: isEventsActive
       };
       items.push(item)
     }
 
-    if (isEventsEnabled) {
+    if (isNewsEnabled) {
+      const newsUrl = city.newsEnabled ? new NewsRouteConfig().getRoutePath({ city, language }) : new TuNewsListRouteConfig().getRoutePath({ city, language })
+
       const item = {
-        key: 'events2',
-        href: new EventsRouteConfig().getRoutePath({ city, language }),
-        selected: currentRoute === EVENTS_ROUTE,
-        text: 'events2',
-        active: true,
-        tooltip: t('noEvents'),
-        active: isEventsActive
+        key: 'news',
+        href: newsUrl,
+        selected: [NEWS_ROUTE, TUNEWS_LIST_ROUTE, TUNEWS_DETAILS_ROUTE, LOCAL_NEWS_DETAILS_ROUTE, LOCAL_NEWS_DETAILS_ROUTE].includes(currentRoute),
+        text: t('news'),
+        active: isNewsActive,
       };
       items.push(item)
     }
-
 
     if (isExtrasEnabled) {
       const item = {

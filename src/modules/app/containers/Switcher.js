@@ -7,6 +7,9 @@ import {
   CategoriesMapModel,
   CityModel,
   EventModel,
+  LocalNewsModel,
+  TuNewsModel,
+  TuNewsElementModel,
   ExtraModel,
   LanguageModel,
   PageModel,
@@ -39,6 +42,10 @@ type PropsType = {|
   categoriesPayload: Payload<CategoriesMapModel>,
   poisPayload: Payload<Array<PoiModel>>,
   eventsPayload: Payload<Array<EventModel>>,
+  newsPayload: Payload<Array<LocalNewsModel>>,
+  newsElementPayload: Payload<LocalNewsModel>,
+  tuNewsPayload: Payload<Array<TuNewsModel>>,
+  tuNewsElementPayload: Payload<Array<TuNewsElementModel>>,
   extrasPayload: Payload<Array<ExtraModel>>,
   sprungbrettJobsPayload: Payload<Array<SprungbrettExtraPage>>,
   wohnenPayload: Payload<Array<WohnenOfferModel>>,
@@ -93,7 +100,7 @@ export class Switcher extends React.Component<PropsType> {
   }
 
   renderLayoutWithContent (): React.Node {
-    const { location, viewportSmall, darkMode, categoriesPayload, citiesPayload, toggleDarkMode, eventsPayload } =
+    const { location, viewportSmall, darkMode, categoriesPayload, citiesPayload, toggleDarkMode, eventsPayload, newsPayload, tuNewsPayload, tuNewsElementPayload, newsElementPayload } =
       this.props
 
     const routeConfig = getRouteConfig(location.type)
@@ -120,6 +127,7 @@ export class Switcher extends React.Component<PropsType> {
                         categories={categoriesPayload.data}
                         cities={citiesPayload.data}
                         events={eventsPayload.data}
+                        news={newsPayload && newsPayload.data}
                         darkMode={darkMode}
                         viewportSmall={viewportSmall}
                         toggleDarkMode={toggleDarkMode}
@@ -144,6 +152,10 @@ const mapStateToProps = (state: StateType) => ({
   citiesPayload: state.cities,
   categoriesPayload: state.categories,
   eventsPayload: state.events,
+  newsPayload: state.news,
+  newsElementPayload: state.newsElement,
+  tuNewsPayload: state.tunews_list,
+  tuNewsElementPayload: state.tunews_element,
   poisPayload: state.pois,
   extrasPayload: state.extras,
   sprungbrettJobsPayload: state.sprungbrettJobs,
