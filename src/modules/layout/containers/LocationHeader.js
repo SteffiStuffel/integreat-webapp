@@ -4,7 +4,6 @@ import type { Element } from 'react'
 import React from 'react'
 import type { TFunction } from 'react-i18next'
 import { withTranslation } from 'react-i18next'
-
 import LanguageSelector from '../../common/containers/LanguageSelector'
 import searchIcon from '../assets/magnifier.svg'
 import landingIcon from '../assets/location-icon.svg'
@@ -74,25 +73,24 @@ export class LocationHeader extends React.Component<PropsType> {
 
     const items: any = [];
 
-    if (isCategoriesEnabled) {
+    if (isExtrasEnabled) {
       const item = {
-        key: 'categories',
-        href: new CategoriesRouteConfig().getRoutePath({ city, language }),
-        selected: currentRoute === CATEGORIES_ROUTE,
-        text: 'categories',
+        key: 'extras',
+        href: new ExtrasRouteConfig().getRoutePath({ city, language }),
+        selected: [EXTRAS_ROUTE, WOHNEN_ROUTE, SPRUNGBRETT_ROUTE].includes(currentRoute),
+        text: t('offers'),
         active: true
       };
       items.push(item)
     }
 
-    if (isEventsEnabled) {
+    if (isCategoriesEnabled) {
       const item = {
-        key: 'events',
-        href: new EventsRouteConfig().getRoutePath({ city, language }),
-        selected: currentRoute === EVENTS_ROUTE,
-        text: 'events',
-        tooltip: t('noEvents'),
-        active: isEventsActive
+        key: 'categories',
+        href: new CategoriesRouteConfig().getRoutePath({ city, language }),
+        selected: currentRoute === CATEGORIES_ROUTE,
+        text: t('categories'),
+        active: true
       };
       items.push(item)
     }
@@ -110,13 +108,14 @@ export class LocationHeader extends React.Component<PropsType> {
       items.push(item)
     }
 
-    if (isExtrasEnabled) {
+    if (isEventsEnabled) {
       const item = {
-        key: 'extras',
-        href: new ExtrasRouteConfig().getRoutePath({ city, language }),
-        selected: [EXTRAS_ROUTE, WOHNEN_ROUTE, SPRUNGBRETT_ROUTE].includes(currentRoute),
-        text: 'offers',
-        active: true
+        key: 'events',
+        href: new EventsRouteConfig().getRoutePath({ city, language }),
+        selected: currentRoute === EVENTS_ROUTE,
+        text: t('events'),
+        tooltip: t('noEvents'),
+        active: isEventsActive
       };
       items.push(item)
     }
