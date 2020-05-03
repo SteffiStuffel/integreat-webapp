@@ -22,6 +22,7 @@ import { WOHNEN_ROUTE } from '../../app/route-configs/WohnenRouteConfig'
 import { SPRUNGBRETT_ROUTE } from '../../app/route-configs/SprungbrettRouteConfig'
 import LandingRouteConfig from '../../app/route-configs/LandingRouteConfig'
 import type { LanguageChangePathsType } from '../../app/containers/Switcher'
+import ScrollableMenu from './../components/ScrollableMenu'
 
 type PropsType = {|
   events: ?Array<EventModel>,
@@ -64,43 +65,56 @@ export class LocationHeader extends React.Component<PropsType> {
     const isEventsActive = events ? events.length > 0 : false
     const isCategoriesEnabled = isExtrasEnabled || isEventsEnabled
 
-    const items: Array<Element<typeof HeaderNavigationItem>> = []
+    const items: any = [];
 
-    if (isExtrasEnabled) {
-      items.push(
-        <HeaderNavigationItem
-          key='extras'
-          href={new ExtrasRouteConfig().getRoutePath({ city, language })}
-          selected={[EXTRAS_ROUTE, WOHNEN_ROUTE, SPRUNGBRETT_ROUTE].includes(currentRoute)}
-          text={t('offers')}
-          active
-        />
-      )
-    }
 
     if (isCategoriesEnabled) {
-      items.push(
-        <HeaderNavigationItem
-          key='categories'
-          href={new CategoriesRouteConfig().getRoutePath({ city, language })}
-          selected={currentRoute === CATEGORIES_ROUTE}
-          text={t('categories')}
-          active
-        />
-      )
+      const item = {
+        key: 'categories',
+        href: new CategoriesRouteConfig().getRoutePath({ city, language }),
+        selected: currentRoute === CATEGORIES_ROUTE,
+        text: 'categories',
+        active: true
+      };
+      items.push(item)
     }
 
     if (isEventsEnabled) {
-      items.push(
-        <HeaderNavigationItem
-          key='events'
-          href={new EventsRouteConfig().getRoutePath({ city, language })}
-          selected={currentRoute === EVENTS_ROUTE}
-          text={t('events')}
-          tooltip={t('noEvents')}
-          active={isEventsActive}
-        />
-      )
+      const item = {
+        key: 'events',
+        href: new EventsRouteConfig().getRoutePath({ city, language }),
+        selected: currentRoute === EVENTS_ROUTE,
+        text: 'events',
+        active: true,
+        tooltip: t('noEvents'),
+        active: isEventsActive
+      };
+      items.push(item)
+    }
+
+    if (isEventsEnabled) {
+      const item = {
+        key: 'events2',
+        href: new EventsRouteConfig().getRoutePath({ city, language }),
+        selected: currentRoute === EVENTS_ROUTE,
+        text: 'events2',
+        active: true,
+        tooltip: t('noEvents'),
+        active: isEventsActive
+      };
+      items.push(item)
+    }
+
+
+    if (isExtrasEnabled) {
+      const item = {
+        key: 'extras',
+        href: new ExtrasRouteConfig().getRoutePath({ city, language }),
+        selected: [EXTRAS_ROUTE, WOHNEN_ROUTE, SPRUNGBRETT_ROUTE].includes(currentRoute),
+        text: 'offers',
+        active: true
+      };
+      items.push(item)
     }
 
     return items
@@ -116,7 +130,7 @@ export class LocationHeader extends React.Component<PropsType> {
         logoHref={new CategoriesRouteConfig().getRoutePath({ city, language })}
         actionItems={this.getActionItems()}
         cityName={cityName}
-        navigationItems={this.getNavigationItems()}
+        navigationItems={<ScrollableMenu menuNavItems={this.getNavigationItems()}/>}
         onStickyTopChanged={this.props.onStickyTopChanged}
       />
     )
