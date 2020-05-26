@@ -34,7 +34,10 @@ const createConfig = (env = {}) => {
     // The entry point for the bundle
     entry: [
       '!!style-loader!css-loader!normalize.css/normalize.css',
+      '@babel/polyfill',
       'react-hot-loader/patch',
+      'react',
+      'react-dom',
       /* The main entry point of your JavaScript application */
       './main.js'
     ],
